@@ -27,6 +27,13 @@ def index():
     auth_url=sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
+@app.route('/login')
+def login():
+    limit=request.args.get('limit', '50')
+    session['track_limit']=int(limit)
+    auth_url=sp_oauth.get_authorize_url()
+    return redirect(auth_url)
+
 @app.route('/callback')
 def callback():
     code=request.args.get('code')
@@ -46,16 +53,20 @@ def results():
     sp=spotipy.Spotify(auth=token_info['access_token'])
     user=sp.current_user()
     display_name=user.get('display_name', 'User')
+    limit=session.get('track_limit', 50)
 
-    top_tracks=sp.current_user_top_tracks(limit=50, time_range='long_term')
+    top_tracks=sp.current_user_top_tracks(limit=limit, time_range='long_term')
     items=top_tracks['items']
     no_tracks=len(items)==0
 
+
+    # For keeping track
+    mem_genres={}
+    mem_artists={}
     songs=[]
     for item in items:
         track_name=item['name']
         artists=', '.join(artist['name'] for artist in item['artists'])
-
         try:
             artist_id=item['artists'][0]['id']
             artist_info=sp.artist(artist_id)
@@ -63,6 +74,7 @@ def results():
             genre_str=', '.join(genres) if genres else "Niche"
         except:
             genre_str="Unknown"
+            genres=["Unknown"]
 
         songs.append({
             'name': track_name,
@@ -70,7 +82,19 @@ def results():
             'genre': genre_str
         })
 
-    rendered=render_template("partials/top_tracks.html", songs=songs, display_name=display_name, no_tracks=no_tracks)
+        for genre in genres:
+            if genre in mem_genres: mem_genres[genre]+=1
+            else: mem_genres[genre]=1
+
+        for artist in item['artists']:
+            if artist['name'] in mem_artists: mem_artists[artist['name']]+=1
+            else: mem_artists[artist['name']]=1
+
+    # Gets the top 5 genres and artists
+    top_genres=sorted(mem_genres.items(), key=lambda x: x[1], reverse=True)[:5]
+    top_artists=sorted(mem_artists.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    rendered=render_template("partials/top_tracks.html", songs=songs, display_name=display_name, no_tracks=no_tracks,top_genres=top_genres,top_artists=top_artists,limit=limit)
     return jsonify({"html": rendered})
 
 if __name__ == '__main__':
