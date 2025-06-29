@@ -41,7 +41,10 @@ function sortTable(colIndex) {
     const headers=document.querySelectorAll('.sort-header');
     headers.forEach((btn, i)=>{
         const arrow=btn.querySelector('.sort-arrow');
-        if(i===colIndex) arrow.textContent=currentSortDir==='desc' ? '▲' : '▼';
+        if(i===colIndex) {
+            if (isNumberCol) arrow.textContent=currentSortDir==='asc' ? '▲' : '▼';
+            else arrow.textContent=currentSortDir==='desc' ? '▲' : '▼';
+        }
         else arrow.textContent='';
         
     });
