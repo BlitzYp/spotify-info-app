@@ -16,22 +16,6 @@
       <p>This may take a few seconds depending on your data.</p>
     </div>
   </div>
-
-  <script>
-    fetch('/results')
-      .then(res => res.json())
-      .then(data => {
-        if (data.html) {
-          document.getElementById('content').innerHTML = data.html;
-        } else {
-          document.getElementById('content').innerHTML = '<div class="alert alert-danger">Failed to load your top tracks.</div>';
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('content').innerHTML = '<div class="alert alert-danger">Something went wrong while fetching your data.</div>';
-      });
-  </script>
-
+  <script src="{{ url_for('static', filename='JS/loadResults.js') }}"></script>
 </body>
 </html>
