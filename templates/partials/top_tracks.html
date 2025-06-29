@@ -1,0 +1,28 @@
+<h1 class="mb-4 text-center">🎧 Top 50 Tracks for {{ display_name }}</h1>
+
+{% if no_tracks %}
+  <div class="alert alert-warning text-center">
+    <strong>No data found:</strong> Spotify didn’t return any top tracks for your account.
+  </div>
+{% else %}
+<table class="table table-hover table-bordered bg-white shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>Track</th>
+      <th>Artist</th>
+      <th>Genre(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for song in songs %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ song.name }}</td>
+        <td>{{ song.artist }}</td>
+        <td>{{ song.genre }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
