@@ -1,9 +1,11 @@
 # Imports
-from flask import Flask, request, render_template, redirect, session, jsonify
 import spotipy
+import io
+import os
+import json
+from flask import Flask, request, render_template, redirect, session, jsonify
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
-import os
 
 # Env
 load_dotenv()
@@ -95,7 +97,16 @@ def results():
     top_artists=sorted(mem_artists.items(), key=lambda x: x[1], reverse=True)[:5]
 
     rendered=render_template("partials/top_tracks.html", songs=songs, display_name=display_name, no_tracks=no_tracks,top_genres=top_genres,top_artists=top_artists,limit=limit)
+    session["export_songs"]=songs
     return jsonify({"html": rendered})
+
+@app.route('/export')
+def export():
+    songs=session.get('export_songs')
+    format=request.args.get('format','txt')
+    if not songs: return "You have to songs to export"
+
+    output_buffer=io.StringIO()
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8888)
