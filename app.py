@@ -59,12 +59,22 @@ def results():
     if not token_info:
         return jsonify({"error": "No token info"}, 403)
 
+    # Check for cached data so we don't have to request the entire dataset again
+    limit = session.get("track_limit", 50)
+    if session.get("rendered_html") and session.get("song_count_rendered") == limit:
+        return jsonify({"html": session.get("rendered_html")})
+
     sp = spotipy.Spotify(auth=token_info["access_token"])
     user = sp.current_user()
     display_name = user.get("display_name", "User")
-    limit = session.get("track_limit", 50)
 
-    top_tracks = sp.current_user_top_tracks(limit=limit, time_range="long_term")
+    # In case the token expires
+    try:
+        top_tracks = sp.current_user_top_tracks(limit=limit, time_range="long_term")
+    except spotipy.exceptions.SpotifyException:
+        session.clear()
+        return jsonify({"error": "Spotify session expired. Please log in again."}), 401
+
     items = top_tracks["items"]
     no_tracks = len(items) == 0
 
@@ -112,6 +122,10 @@ def results():
         limit=limit,
     )
     session["export_songs"] = songs
+    session["top_artists"] = top_artists
+    session["top_genres"] = top_genres
+    session["song_count_rendered"] = limit
+    session["rendered_html"] = rendered
     return jsonify({"html": rendered})
 
 
