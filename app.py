@@ -146,7 +146,6 @@ def export():
     format = request.args.get("format", "txt")
     if not songs:
         return "You have to songs to export"
-
     if format == "json":
         response = Response(json.dumps(songs, indent=2), mimetype="application/json")
         response.headers["Content-Disposition"] = "attachment; filename=top_tracks.json"
