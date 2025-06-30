@@ -52,6 +52,20 @@ def loading():
     return render_template("loading.html")
 
 
+def get_render(session_data):
+    rendered = render_template(
+        "partials/top_tracks.html",
+        songs=session_data.get("export_songs"),
+        display_name=session_data["display_name"],
+        no_tracks=session_data["no_tracks"],
+        top_genres=session_data["top_genres"],
+        top_artists=session_data["top_artists"],
+        limit=session_data["limit"],
+        songs_count_rendered=session_data["songs_count_rendered"],
+    )
+    return rendered
+
+
 @app.route("/results")
 def results():
     token_info = session.get("token_info")
@@ -60,8 +74,8 @@ def results():
 
     # Check for cached data so we don't have to request the entire dataset again
     limit = session.get("track_limit", 50)
-    if session.get("rendered_html") and session.get("song_count_rendered") == limit:
-        return jsonify({"html": session.get("rendered_html")})
+    if session.get("limit") == limit and not session.get("no_tracks"):
+        return jsonify({"html": get_render(session)})
 
     sp = spotipy.Spotify(auth=token_info["access_token"])
     user = sp.current_user()
@@ -111,21 +125,20 @@ def results():
     top_genres = sorted(mem_genres.items(), key=lambda x: x[1], reverse=True)[:5]
     top_artists = sorted(mem_artists.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    rendered = render_template(
-        "partials/top_tracks.html",
-        songs=songs,
-        display_name=display_name,
-        no_tracks=no_tracks,
-        top_genres=top_genres,
-        top_artists=top_artists,
-        limit=limit,
-    )
+    # Cache data
     session["export_songs"] = songs
     session["top_artists"] = top_artists
     session["top_genres"] = top_genres
-    session["song_count_rendered"] = limit
-    session["rendered_html"] = rendered
-    return jsonify({"html": rendered})
+    session["songs_count_rendered"] = len(items)
+    session["limit"] = limit
+    session["display_name"] = display_name
+    session["no_tracks"] = no_tracks
+
+    # Create the template
+    rendered = get_render(session)
+    return jsonify(
+        {"html": rendered, "top_genres": top_genres, "top_artists": top_artists}
+    )
 
 
 @app.route("/logout")
