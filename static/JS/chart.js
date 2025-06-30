@@ -2,7 +2,10 @@
 function loadCharts() {
     const genreEl = document.getElementById("genre-data");
     const artistEl = document.getElementById("artist-data");
-
+    const generateColor = (index) => {
+        const hue = (index * 47) % 360;
+        return `hsl(${hue}, 70%, 60%)`;
+    }
     if (!genreEl || !artistEl) return;
 
     let genreData, artistData;
@@ -28,7 +31,7 @@ function loadCharts() {
         data: {
             labels: genreData.labels,
             datasets: [{
-                label: "Top Genres",
+                label: "Song count",
                 data: genreData.counts,
                 borderWidth: 1
             }]
@@ -47,16 +50,16 @@ function loadCharts() {
             }
         }
     });
-
+    const uniqueColors = artistData.counts.map((_, i) => generateColor(i));
     new Chart(artistCtx, {
         type: "bar",
         data: {
             labels: artistData.labels,
             datasets: [{
-                label: "Top Artists",
+                label: "Song count",
                 data: artistData.counts,
-                backgroundColor: "#0d6efd",
-                borderColor: "#0d6efd",
+                backgroundColor: uniqueColors,
+                borderColor: uniqueColors,
                 borderWidth: 1,
             }],
         },
@@ -65,6 +68,9 @@ function loadCharts() {
                 title: {
                     display: true,
                     text: "Top Artists"
+                },
+                legend: {
+                    display: false,
                 }
             },
             scales: {
