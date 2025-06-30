@@ -1,26 +1,31 @@
 <h1 class="mb-4 text-center">🎧 Top {{limit}} Tracks for {{ display_name }}</h1>
 {% if no_tracks %}
-  <div class="alert alert-warning text-center">
-    <strong>No data found:</strong> Spotify didn’t return any top tracks for your account.
-  </div>
+<div class="alert alert-warning text-center">
+  <strong>No data found:</strong> Spotify didn’t return any top tracks for your account.
+</div>
 {% else %}
-<table id="song-table" data-sort-dir="desc" data-sort-col="0" class="table table-hover table-bordered bg-white shadow-sm">
+<table id="song-table" data-sort-dir="desc" data-sort-col="0"
+  class="table table-hover table-bordered bg-white shadow-sm">
   <thead class="table-dark">
-  <tr>
-    <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(0)"># <span class="sort-arrow"></span></button></th>
-    <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(1)">Track <span class="sort-arrow"></span></button></th>
-    <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(2)">Artist <span class="sort-arrow"></span></button></th>
-    <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(3)">Genre(s) <span class="sort-arrow"></span></button></th>
-  </tr>
+    <tr>
+      <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(0)"># <span
+            class="sort-arrow"></span></button></th>
+      <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(1)">Track <span
+            class="sort-arrow"></span></button></th>
+      <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(2)">Artist <span
+            class="sort-arrow"></span></button></th>
+      <th><button class="btn btn-link text-light p-0 sort-header" onclick="sortTable(3)">Genre(s) <span
+            class="sort-arrow"></span></button></th>
+    </tr>
   </thead>
   <tbody>
     {% for song in songs %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ song.name }}</td>
-        <td>{{ song.artist }}</td>
-        <td>{{ song.genre }}</td>
-      </tr>
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ song.name }}</td>
+      <td>{{ song.artist }}</td>
+      <td>{{ song.genre }}</td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -31,7 +36,7 @@
   <h5>📁 Export your data:</h5>
   <a href="/export?format=txt" class="btn btn-outline-primary mx-1">Download .txt</a>
   <a href="/export?format=csv" class="btn btn-outline-success mx-1">Download .csv</a>
-  <a href="/export?format=json" class="btn btn-outline-dark mx-1">Download .json</a>
+  <a href="/export?format=json" class="btn btn-outline-light mx-1">Download .json</a>
 </div>
 
 <hr class="my-4">

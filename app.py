@@ -3,9 +3,10 @@ import io
 import os
 import json
 import spotipy
-from flask import Flask, request, render_template, redirect, session, jsonify
+from flask import Flask, request, render_template, redirect, session, jsonify, Response
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
+from write import write_csv, write_txt
 
 # Env
 load_dotenv()
@@ -114,7 +115,12 @@ def results():
     return jsonify({"html": rendered})
 
 
-"""
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+
 @app.route("/export")
 def export():
     songs = session.get("export_songs")
@@ -122,8 +128,16 @@ def export():
     if not songs:
         return "You have to songs to export"
 
-    output_buffer = io.StringIO()
-"""
+    if format == "json":
+        response = Response(json.dumps(songs, indent=2), mimetype="application/json")
+        response.headers["Content-Disposition"] = "attachment; filename=top_tracks.json"
+    elif format == "csv":
+        response = write_csv(songs)
+    else:
+        response = write_txt(songs)
+
+    return response
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8888)
