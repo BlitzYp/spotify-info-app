@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Logging out...</title>
+    <meta http-equiv="refresh" content="2;url='/'">
+    <script>
+        // Open Spotify logout in background
+        window.onload = () => {
+            const win = window.open("https://accounts.spotify.com/en/logout", "_blank");
+            setTimeout(() => {
+                if (win) win.close();
+                window.location.href = "/";
+            }, 2000);
+        };
+    </script>
+</head>
+
+<body class="bg-dark text-light d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <h2>Logging you out of Spotify...</h2>
+        <p>Please wait a moment. You'll be redirected shortly.</p>
+    </div>
+</body>
+
+</html>

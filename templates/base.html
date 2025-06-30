@@ -34,7 +34,12 @@
                     {% endif %}
                     {% if session.get('token_info') %}
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="/logout">Log Out</a>
+                        <a class="nav-link text-warning" href="/logout">Log Out (App)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/logout_account">
+                            Log Out (Spotify)
+                        </a>
                     </li>
                     {% endif %}
                 </ul>

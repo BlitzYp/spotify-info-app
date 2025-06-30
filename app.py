@@ -1,5 +1,4 @@
 # Imports
-import io
 import os
 import json
 import spotipy
@@ -133,6 +132,12 @@ def results():
 def logout():
     session.clear()
     return redirect("/")
+
+
+@app.route("/logout_account")
+def logout_account():
+    session.clear()
+    return redirect("https://accounts.spotify.com/en/logout")
 
 
 @app.route("/export")
