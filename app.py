@@ -2,6 +2,7 @@
 import os
 import json
 import spotipy
+import uuid
 from flask import Flask, request, render_template, redirect, session, jsonify, Response
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
@@ -15,7 +16,7 @@ redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-
+state = str(uuid.uuid4())
 # Spotify Auth
 sp_oauth = SpotifyOAuth(
     client_id=client_id,
@@ -23,6 +24,14 @@ sp_oauth = SpotifyOAuth(
     redirect_uri=redirect_uri,
     scope="user-library-read user-read-private user-top-read",
 )
+
+
+"""
+    show_dialog=True,
+    cache_path=None,
+    open_browser=True,
+    state = str(uuid.uuid4()) 
+    """
 
 
 @app.route("/")
@@ -79,6 +88,7 @@ def results():
 
     sp = spotipy.Spotify(auth=token_info["access_token"])
     user = sp.current_user()
+    print(f"{user.get('display_name')} {user.get('id')}")
     display_name = user.get("display_name", "User")
 
     # In case the token expires
