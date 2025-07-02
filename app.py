@@ -31,7 +31,7 @@ sp_oauth = SpotifyOAuth(
     cache_path=None,
     open_browser=True,
     state = str(uuid.uuid4()) 
-    """
+"""
 
 
 @app.route("/")
