@@ -23,14 +23,14 @@ sp_oauth = SpotifyOAuth(
     client_secret=client_secret,
     redirect_uri=redirect_uri,
     scope="user-library-read user-read-private user-top-read",
+    show_dialog=True,
+    cache_path=None,
+    open_browser=True,
+    state=str(uuid.uuid4()),
 )
 
 
 """
-    show_dialog=True,
-    cache_path=None,
-    open_browser=True,
-    state = str(uuid.uuid4()) 
 """
 
 
