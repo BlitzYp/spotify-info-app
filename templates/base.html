@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class="bg-dark text-light">
+<body class="bg-dark text-light d-flex flex-column min-vh-100">
 
     <!--  Navbar -->
     <nav
@@ -48,12 +48,25 @@
         </div>
     </nav>
 
-
+    {% block body_content %}
     <!-- Main content -->
-    <div class="container my-5">
+    <main class="flex-fill container my-5">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
+    <!-- Footer -->
+    <footer class="bg-black text-light text-center py-3 border-top border-secondary mt-auto">
+        <small>
+            © {{ now.year }} BlitzYp (Marcis D.) —
+            <a href="https://github.com/BlitzYp" class="text-decoration-none text-info" target="_blank">GitHub
+                (main)</a> |
+            <a href="https://github.com/marcisd1" class="text-decoration-none text-info" target="_blank">GitHub
+                (university)</a> |
+            <a href="https://github.com/BlitzYp/spotify-info-app" class="text-decoration-none text-info"
+                target="_blank">Project Repo</a>
+        </small>
+    </footer>
+    {% endblock %}
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ url_for('static', filename='JS/chart.js') }}"></script>

@@ -7,6 +7,7 @@ from flask import Flask, request, render_template, redirect, session, jsonify, R
 from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
 from write import write_csv, write_txt
+from datetime import datetime
 
 # Env
 load_dotenv()
@@ -24,15 +25,17 @@ sp_oauth = SpotifyOAuth(
     client_secret=client_secret,
     redirect_uri=redirect_uri,
     scope="user-library-read user-read-private user-top-read",
-    show_dialog=True,
+    # show_dialog=True,
     cache_path=None,
     open_browser=True,
     state=str(uuid.uuid4()),
 )
 
 
-"""
-"""
+# For the footer
+@app.context_processor
+def inject_now():
+    return {"now": datetime.utcnow()}
 
 
 @app.route("/")
