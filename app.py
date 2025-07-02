@@ -17,6 +17,7 @@ redirect_uri = os.getenv("SPOTIPY_REDIRECT_URI")
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 state = str(uuid.uuid4())
+
 # Spotify Auth
 sp_oauth = SpotifyOAuth(
     client_id=client_id,
@@ -160,6 +161,9 @@ def logout():
 @app.route("/logout_account")
 def logout_account():
     session.clear()
+    # I don't know how but this file somehow BROKE the entire account switching, wtf spotify?
+    if os.path.exists(".cache"):
+        os.remove(".cache")
     return redirect("https://accounts.spotify.com/en/logout")
 
 
