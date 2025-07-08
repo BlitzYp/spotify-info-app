@@ -47,6 +47,8 @@ def index():
 @app.route("/login")
 def login():
     limit = request.args.get("limit", "50")
+    if os.path.exists(".cache"):
+        os.remove(".cache")
     session["track_limit"] = int(limit)
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
