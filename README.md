@@ -10,6 +10,8 @@ A web app that connects to your Spotify account and visualizes your top tracks, 
 
 [spotify-info-app-production.up.railway.app](https://spotify-info-app-production.up.railway.app)
 
+⚠️ Note: Since this app is currently in development mode on Spotify's platform, you’ll need to be added to the allowed testers list to use it.
+Please contact me with your Spotify account email, and I’ll add you manually.
 ---
 
 ## 🚀 Features
